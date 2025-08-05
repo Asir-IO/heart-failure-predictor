@@ -1,0 +1,13 @@
+@font-face {
+    font-family: elite;
+    src: url(fonts/SpecialElite-Regular.ttf);
+}
+
+body {
+    font-family: 'elite', sans-serif;
+}
+
+.title {
+    text-align: center;
+    font-size: 100px;
+}
