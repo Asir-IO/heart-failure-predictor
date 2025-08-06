@@ -40,25 +40,37 @@ with open("model.pkl", "rb") as f:
 
 def predict(*inputs):
     input_data = np.array(inputs).reshape(1, -1)
-    return "They're (most likely) safe" if model.predict(input_data) == 0 else "RIP"
+    with open('debug.txt', 'a') as f:
+        f.write(f'input: {input_data}\n')
+    if model.predict(input_data) == 0:
+        prediction = "They're (most likely) safe =)"
+        return prediction, gr.update(elem_classes=["green-prediction"])
+    else:
+        prediction = "They're in danger."
+        return prediction, gr.update(elem_classes=["red-prediction"])
 
 def render_feature(feature):
     if feature in binary_features:
         labels = binary_labels.get(feature if feature in ['smoking', 'sex'] else 'default', binary_labels['default'])
         gr.Markdown(f"### {names[feature]}")
         state = gr.State(0)
-        btn = gr.Button(labels[0])
+        btn = gr.Button(labels[0], elem_classes=["green-prediction"])
         def toggle(value, labels=labels):
             new_value = 1 - value
-            return labels[new_value], new_value
-        btn.click(fn=toggle, inputs=state, outputs=[btn, state])
+            label = labels[new_value]
+            if label not in ["Female", "Male"]:
+                style = "red-prediction" if abs(new_value) == 1 else "green-prediction"
+            else:
+                style = ""
+            return gr.update(value=label, elem_classes=[style]), new_value, new_value
+        btn.click(fn=toggle, inputs=state, outputs=[btn, state, state])
         return btn, state
     else:
         comp = gr.Number(label=names[feature], placeholder="...")
         return comp, comp
 
 with gr.Blocks(css=css) as demo:
-    gr.Markdown("## Heart Failure Prediction", elem_classes="title")
+    gr.Markdown("## Heart Failure Predictor", elem_classes="title")
 
     input_components = []
     with gr.Row():
@@ -67,9 +79,8 @@ with gr.Blocks(css=css) as demo:
                 for feature in col_features:
                     comp, input_ref = render_feature(feature)
                     input_components.append(input_ref)
-
-    predict_btn = gr.Button("Predict")
-    output_text = gr.Text(label="Model Prediction")
-    predict_btn.click(fn=predict, inputs=input_components, outputs=output_text)
+    predict_btn = gr.Button("Predict", elem_classes="predict-btn")
+    output_text = gr.Text(label="Prediction")
+    predict_btn.click(fn=predict, inputs=input_components, outputs=[output_text, output_text])
 
 demo.launch()
