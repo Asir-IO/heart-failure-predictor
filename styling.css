@@ -1,10 +1,15 @@
 @font-face {
-    font-family: elite;
-    src: url(./fonts/SpecialElite-Regular.ttf);
+    font-family: 'elite';
+    src: url('./fonts/SpecialElite-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
-body {
-    font-family: 'elite', sans-serif;
+@font-face {
+    font-family: 'code';
+    src: url('./fonts/FiraCode-VariableFont_wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 .title {
@@ -15,7 +20,7 @@ body {
 .title p, .title h1, .title h2, .title h3 {
     font-size: 38px !important;
     font-weight: bold !important;
-    font-family: 'elite', sans-serif;
+    font-family: 'code', monospace;
 }
 .green-prediction {
     border: 4px solid green !important;
@@ -33,7 +38,14 @@ body {
     margin-top: 24px;
 }
 
-.gr-number input {
-    font-size: 20px;
-    font-weight: bold;
+.green-btn {
+    border: 4px solid green !important;
+    box-shadow: 0 0 5px green;
+    border-radius: 6px;
+}
+
+.red-btn {
+    border: 4px solid red !important;
+    box-shadow: 0 0 5px red;
+    border-radius: 6px;
 }

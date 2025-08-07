@@ -54,19 +54,22 @@ def render_feature(feature):
         labels = binary_labels.get(feature if feature in ['smoking', 'sex'] else 'default', binary_labels['default'])
         gr.Markdown(f"### {names[feature]}")
         state = gr.State(0)
-        btn = gr.Button(labels[0], elem_classes=["green-prediction"])
+        if feature != 'sex':
+            btn = gr.Button(labels[0], elem_classes=["green-prediction"])
+        else:
+            btn = gr.Button(labels[0])
         def toggle(value, labels=labels):
             new_value = 1 - value
             label = labels[new_value]
             if label not in ["Female", "Male"]:
-                style = "red-prediction" if abs(new_value) == 1 else "green-prediction"
+                style = "red-btn" if abs(new_value) == 1 else "green-btn"
             else:
                 style = ""
             return gr.update(value=label, elem_classes=[style]), new_value, new_value
         btn.click(fn=toggle, inputs=state, outputs=[btn, state, state])
         return btn, state
     else:
-        comp = gr.Number(label=names[feature], placeholder="...")
+        comp = gr.Number(label=names[feature], placeholder="...", elem_classes=["number"])
         return comp, comp
 
 with gr.Blocks(css=css) as demo:
